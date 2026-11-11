@@ -1,8 +1,11 @@
+from turtle import up
+
 import pygame
 from asteroid import Asteroid
 from asteroidfield import AsteroidField
 from constants import SCREEN_WIDTH, SCREEN_HEIGHT
 from player import Player
+from shot import Shot
 from logger import log_state, log_event
 from circleshape import CircleShape
 import sys
@@ -29,6 +32,9 @@ def main():
 
     AsteroidField.containers = (updatable)
     asteroidfield = AsteroidField()
+
+    shots = pygame.sprite.Group()
+    Shot.containers = (shots, drawable, updatable) 
     
     while True:
         log_state()
@@ -45,6 +51,11 @@ def main():
                 log_event("player_hit")
                 print("Game over!")
                 sys.exit()
+            for shot in shots:
+                if ast.collides_with(shot):
+                    log_event("asteroid_shot")
+                    shot.kill()
+                    ast.split()
                 
         
         for cunt in drawable:
